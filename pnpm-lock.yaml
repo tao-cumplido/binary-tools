@@ -64,6 +64,12 @@ importers:
         specifier: 3.9.2
         version: 3.9.2
 
+  packages/node-fs:
+    dependencies:
+      '@binary-tools/core':
+        specifier: workspace:~
+        version: link:../core
+
 packages:
 
   '@apidevtools/json-schema-ref-parser@11.7.3':

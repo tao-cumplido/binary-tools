@@ -1,0 +1,49 @@
+{
+	"name": "@binary-tools/node-fs",
+	"version": "0.0.0",
+	"scripts": {
+		"build": "wireit",
+		"test": "wireit"
+	},
+	"wireit": {
+		"build": {
+			"command": "tscd --pretty",
+			"clean": "if-file-deleted",
+			"files": [
+				"src/**/*.ts",
+				"!src/**/*.test.ts",
+				"tsconfig.json"
+			],
+			"output": [
+				"dist"
+			]
+		},
+		"test": {
+			"command": "tsx --tsconfig tsconfig.test.json --conditions tsx --test-reporter @voxpelli/node-test-pretty-reporter --test 'src/**/*.suite.test.ts'",
+			"files": [
+				"src/**/*.test.ts",
+				"tsconfig.test.json"
+			]
+		}
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"dependencies": {
+		"@binary-tools/core": "workspace:~"
+	},
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/module/binary-data.d.ts",
+				"default": "./dist/module/binary-data.js"
+			},
+			"require": {
+				"types": "./dist/commonjs/binary-data.d.ts",
+				"default": "./dist/commonjs/binary-data.js"
+			}
+		}
+	},
+	"types": "./dist/commonjs/binary-data.d.ts",
+	"main": "./dist/commonjs/binary-data.js"
+}
