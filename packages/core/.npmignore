@@ -1,4 +1,5 @@
 !dist/
+.wireit
 tsconfig*
 *.tsbuildinfo
 *.test.*
