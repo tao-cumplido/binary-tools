@@ -1,6 +1,22 @@
 {
 	"name": "@binary-tools/node-fs",
-	"version": "0.0.0",
+	"version": "0.10.0-alpha.1",
+	"description": "Supercharged data view for files of arbitrary size",
+	"keywords": [
+		"binary",
+		"hex",
+		"data",
+		"view",
+		"dataview",
+		"javascript",
+		"typescript",
+		"node",
+		"fs"
+	],
+	"license": "ISC",
+	"author": "Tao Cumplido",
+	"repository": "https://github.com/tao-cumplido/binary-tools/tree/main/packages/core",
+	"bugs": "https://github.com/tao-cumplido/binary-tools/issues",
 	"scripts": {
 		"build": "wireit",
 		"test": "wireit"

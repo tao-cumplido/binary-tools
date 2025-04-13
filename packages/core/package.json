@@ -1,6 +1,20 @@
 {
 	"name": "@binary-tools/core",
-	"version": "0.0.0",
+	"version": "0.10.0-alpha.1",
+	"description": "Supercharged data view for reading binary data in JavaScript from an async data source",
+	"keywords": [
+		"binary",
+		"hex",
+		"data",
+		"view",
+		"dataview",
+		"javascript",
+		"typescript"
+	],
+	"license": "ISC",
+	"author": "Tao Cumplido",
+	"repository": "https://github.com/tao-cumplido/binary-tools/tree/main/packages/core",
+	"bugs": "https://github.com/tao-cumplido/binary-tools/issues",
 	"scripts": {
 		"build": "wireit",
 		"test": "wireit"
