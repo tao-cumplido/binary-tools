@@ -1,0 +1,21 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": "src",
+		"outDir": "dist",
+		"types": []
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": ["src/**/*.test.ts"],
+	"ts-dualist": {
+		"imports": {
+			"#*.js": "./*.js"
+		},
+		"exports": {
+			".": "entrypoints/index.ts",
+			"./decoder": "entrypoints/decoder.ts",
+			"./encoder": "entrypoints/encoder.ts",
+			"./patterns": "entrypoints/patterns.ts"
+		}
+	}
+}

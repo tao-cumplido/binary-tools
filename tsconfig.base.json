@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"useUnknownInCatchVariables": true,
+		"module": "nodenext",
+		"isolatedModules": true,
+		"exactOptionalPropertyTypes": true,
+		"lib": ["es2023", "esnext.float16"],
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"declaration": true,
+		"declarationMap": true,
+		"resolvePackageJsonImports": true
+	},
+	"exclude": ["eslint-typgen.d.ts"]
+}

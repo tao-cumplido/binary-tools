@@ -1,0 +1,6 @@
+node_modules
+eslint-typegen.d.ts
+.wireit
+dist
+*.tsbuildinfo
+*.tgz
