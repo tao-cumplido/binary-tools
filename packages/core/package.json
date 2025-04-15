@@ -1,6 +1,6 @@
 {
 	"name": "@binary-tools/core",
-	"version": "0.10.0-alpha.2",
+	"version": "0.10.0-alpha.3",
 	"description": "Supercharged data view for reading binary data in JavaScript from an async data source",
 	"keywords": [
 		"binary",
