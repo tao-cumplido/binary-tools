@@ -29,45 +29,88 @@ test.describe("BinaryData", () => {
 		assert.throws(() => data.hasNext(0));
 	});
 
-	test("seek", async () => {
-		const source = new Uint8Array([ 0, 1, 2, 3, 4, ]);
-		const data = new BinaryData(source.byteLength, updateBuffer(source), { bufferSize: 2, });
+	test.describe("seek", () => {
+		test("with updateBuffer", async () => {
+			const source = new Uint8Array([ 0, 1, 2, 3, 4, ]);
+			const data = new BinaryData(source.byteLength, updateBuffer(source), { bufferSize: 2, });
 
-		await data.seek(3);
+			await data.seek(3);
 
-		assert.equal(data.offset, 3);
-		assert.equal(data.bufferStart, 3);
-		assert.deepEqual(data.buffer, new Uint8Array([ 3, 4, ]));
+			assert.equal(data.offset, 3);
+			assert.equal(data.bufferStart, 3);
+			assert.deepEqual(data.buffer, new Uint8Array([ 3, 4, ]));
 
-		await data.seek(4);
+			await data.seek(4);
 
-		assert.equal(data.offset, 4);
-		assert.equal(data.bufferStart, 3);
-		assert.deepEqual(data.buffer, new Uint8Array([ 3, 4, ]));
+			assert.equal(data.offset, 4);
+			assert.equal(data.bufferStart, 3);
+			assert.deepEqual(data.buffer, new Uint8Array([ 3, 4, ]));
 
-		await data.seek(5);
+			await data.seek(5);
 
-		assert.equal(data.offset, 5);
-		assert.equal(data.bufferStart, 5);
-		assert.deepEqual(data.buffer, new Uint8Array([]));
+			assert.equal(data.offset, 5);
+			assert.equal(data.bufferStart, 5);
+			assert.deepEqual(data.buffer, new Uint8Array([]));
 
-		await data.seek(2);
+			await data.seek(2);
 
-		assert.equal(data.offset, 2);
-		assert.equal(data.bufferStart, 2);
-		assert.deepEqual(data.buffer, new Uint8Array([ 2, 3, ]));
+			assert.equal(data.offset, 2);
+			assert.equal(data.bufferStart, 2);
+			assert.deepEqual(data.buffer, new Uint8Array([ 2, 3, ]));
 
-		await data.seek(4);
+			await data.seek(4);
 
-		assert.equal(data.offset, 4);
-		assert.equal(data.bufferStart, 4);
-		assert.deepEqual(data.buffer, new Uint8Array([ 4, ]));
+			assert.equal(data.offset, 4);
+			assert.equal(data.bufferStart, 4);
+			assert.deepEqual(data.buffer, new Uint8Array([ 4, ]));
 
-		await assert.rejects(data.seek(6));
+			await assert.rejects(data.seek(6));
 
-		assert.equal(data.offset, 4);
-		assert.equal(data.bufferStart, 4);
-		assert.deepEqual(data.buffer, new Uint8Array([ 4, ]));
+			assert.equal(data.offset, 4);
+			assert.equal(data.bufferStart, 4);
+			assert.deepEqual(data.buffer, new Uint8Array([ 4, ]));
+		});
+
+		test("with direct source", async () => {
+			const source = new Uint8Array([ 0, 1, 2, 3, 4, ]);
+			const data = new BinaryData(source);
+
+			await data.seek(3);
+
+			assert.equal(data.offset, 3);
+			assert.equal(data.bufferStart, 0);
+			assert.deepEqual(data.buffer, source);
+
+			await data.seek(4);
+
+			assert.equal(data.offset, 4);
+			assert.equal(data.bufferStart, 0);
+			assert.deepEqual(data.buffer, source);
+
+			await data.seek(5);
+
+			assert.equal(data.offset, 5);
+			assert.equal(data.bufferStart, 5);
+			assert.deepEqual(data.buffer, new Uint8Array([]));
+
+			await data.seek(2);
+
+			assert.equal(data.offset, 2);
+			assert.equal(data.bufferStart, 2);
+			assert.deepEqual(data.buffer, new Uint8Array([ 2, 3, 4, ]));
+
+			await data.seek(4);
+
+			assert.equal(data.offset, 4);
+			assert.equal(data.bufferStart, 2);
+			assert.deepEqual(data.buffer, new Uint8Array([ 2, 3, 4, ]));
+
+			await assert.rejects(data.seek(6));
+
+			assert.equal(data.offset, 4);
+			assert.equal(data.bufferStart, 2);
+			assert.deepEqual(data.buffer, new Uint8Array([ 2, 3, 4, ]));
+		});
 	});
 
 	test.todo("skip");

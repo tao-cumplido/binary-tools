@@ -83,13 +83,27 @@ export class BinaryData<Buffer extends Uint8Array = Uint8Array> {
 
 	constructor(byteLength: number, updateBuffer: UpdateBufferFunction<Buffer>, config: BinaryDataConfig);
 	constructor(byteLength: number, updateBuffer: UpdateBufferFunction<Buffer>, byteOrder?: ByteOrder, config?: BinaryDataConfig);
-	constructor(byteLength: number, updateBuffer: UpdateBufferFunction<Buffer>, byteOrderOrConfig?: ByteOrder | BinaryDataConfig, { bufferSize = 2 ** 20 * 10, } = {}) {
-		this.#byteLength = byteLength;
-		this.#updateBuffer = updateBuffer;
+	constructor(source: Buffer, byteOrder?: ByteOrder);
+	constructor(byteLengthOrSource: number | Buffer, updateBufferOrByteOrder?: UpdateBufferFunction<Buffer> | ByteOrder, byteOrderOrConfig?: ByteOrder | BinaryDataConfig, { bufferSize = 2 ** 20 * 10, } = {}) {
 		this.#offset = 0;
 		this.#bufferStart = 0;
-		this.byteOrder	= byteOrderOrConfig instanceof ByteOrder ? byteOrderOrConfig : undefined;
-		this.#bufferSize = byteOrderOrConfig instanceof ByteOrder ? bufferSize : byteOrderOrConfig?.bufferSize ?? bufferSize;
+
+		if (typeof byteLengthOrSource === "number") {
+			this.#byteLength = byteLengthOrSource;
+			this.#updateBuffer = updateBufferOrByteOrder as UpdateBufferFunction<Buffer>;
+			if (byteOrderOrConfig instanceof ByteOrder) {
+				this.byteOrder = byteOrderOrConfig;
+				this.#bufferSize = bufferSize;
+			} else {
+				this.#bufferSize = byteOrderOrConfig?.bufferSize ?? bufferSize;
+			}
+		} else {
+			this.#byteLength = byteLengthOrSource.byteLength;
+			this.byteOrder = updateBufferOrByteOrder as ByteOrder;
+			this.#bufferSize = this.#byteLength;
+			this.#buffer = byteLengthOrSource;
+			this.#updateBuffer = async ({ offset, }) => byteLengthOrSource.subarray(offset, this.#byteLength) as Buffer;
+		}
 	}
 
 	async #getBuffer() {
