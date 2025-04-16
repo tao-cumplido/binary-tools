@@ -1,7 +1,11 @@
+import type { ReadonlyTuple, Writable } from "type-fest";
+
 import type { ByteOrder } from "#byte-order.js";
 import { assertInt } from "#assert.js";
 import { getDecoderObject, validateResult, type Decoder, type DecoderObject, type DecoderResult } from "#datatypes/decoder.js";
 import { repeat } from "#repeat.js";
+
+type ArrayResult<Value, Count extends number> = Writable<ReadonlyTuple<Value, Count>>;
 
 function combine<Value>(items: readonly DecoderResult<Value>[]): DecoderResult<Value[]> {
 	let byteLength = 0;
@@ -28,7 +32,7 @@ export const errorMessage = {
 	invalidItem: (index: number) => `Invalid array item at index ${index} produced an empty source buffer`,
 } as const;
 
-export const arrayDecoder = <Value>(type: Decoder<Value>, count: number, overrideByteOrder?: ByteOrder) => {
+export const arrayDecoder = <Value, Count extends number>(type: Decoder<Value>, count: Count, overrideByteOrder?: ByteOrder) => {
 	assertInt(count, { min: 0, });
 
 	const { decode: decodeItem, requiredBufferSize, } = getDecoderObject(type);
@@ -55,7 +59,7 @@ export const arrayDecoder = <Value>(type: Decoder<Value>, count: number, overrid
 				return potentialResult;
 			});
 
-			return combine(items);
+			return combine(items) as DecoderResult<ArrayResult<Value, Count>>;
 		},
-	} as const satisfies DecoderObject<Value[]>;
+	} as const satisfies DecoderObject<ArrayResult<Value, Count>>;
 };
