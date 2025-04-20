@@ -80,7 +80,7 @@ export const stringDecoderFixedByteLength = (char: Decoder<number>, byteLength: 
 	} as const satisfies DecoderObject<string>;
 };
 
-export const stringDecoderTerminated = (char: Decoder<number>, terminator: string, overrideByteOrder?: ByteOrder) => {
+export const stringDecoderTerminated = (char: Decoder<number>, terminator = "\0", overrideByteOrder?: ByteOrder) => {
 	assertInt(terminator.length, { min: 1, });
 
 	const { decode: decodeChar, requiredBufferSize, } = getDecoderObject(char);
@@ -116,15 +116,21 @@ export const stringDecoderTerminated = (char: Decoder<number>, terminator: strin
 	} as const satisfies DecoderObject<string>;
 };
 
+export type StringOptions = {
+	readonly count: number;
+	readonly byteLength: number;
+	readonly terminator?: string;
+};
+
 export type StringDecoderFactory = {
-	(char: Decoder<number>, options: { readonly count: number; }, byteOrder?: ByteOrder): DecoderObject<string>;
-	(char: Decoder<number>, options: { readonly byteLength: number; }, byteOrder?: ByteOrder): DecoderObject<string>;
-	(char: Decoder<number>, options?: { readonly terminator?: string; }, byteOrder?: ByteOrder): DecoderObject<string>;
+	(char: Decoder<number>, options: Pick<StringOptions, "count">, byteOrder?: ByteOrder): DecoderObject<string>;
+	(char: Decoder<number>, options: Pick<StringOptions, "byteLength">, byteOrder?: ByteOrder): DecoderObject<string>;
+	(char: Decoder<number>, options?: Pick<StringOptions, "terminator">, byteOrder?: ByteOrder): DecoderObject<string>;
 };
 
 export const stringDecoder: StringDecoderFactory = (char, options, byteOrder) => {
 	return match(options ?? {})
 		.with({ count: P.number, }, ({ count, }) => stringDecoderFixedCount(char, count, byteOrder))
 		.with({ byteLength: P.number, }, ({ byteLength, }) => stringDecoderFixedByteLength(char, byteLength, byteOrder))
-		.otherwise(({ terminator = "\0", }) => stringDecoderTerminated(char, terminator, byteOrder));
+		.otherwise(({ terminator, }) => stringDecoderTerminated(char, terminator, byteOrder));
 };

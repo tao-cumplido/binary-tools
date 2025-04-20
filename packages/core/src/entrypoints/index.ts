@@ -21,7 +21,7 @@ import { floatDecoder } from "#datatypes/float/decode.js";
 import { floatEncoder } from "#datatypes/float/encode.js";
 import { intDecoder } from "#datatypes/int/decode.js";
 import { intEncoder } from "#datatypes/int/encode.js";
-import { stringDecoder, stringDecoderTerminated } from "#datatypes/string/decode.js";
+import { stringDecoder, stringDecoderTerminated, type StringOptions } from "#datatypes/string/decode.js";
 import { stringEncoder } from "#datatypes/string/encode.js";
 
 import type { Decoder, FloatConfig, IntDecoderConfig as IntConfig, SafeIntBytes } from "./decoder.js";
@@ -96,12 +96,12 @@ export const array: typeof arrayDecoder & typeof arrayEncoder = <Value>(
 };
 
 export type StringFactory = {
-	(char: Codec<number>, options?: { readonly terminator?: string; }, byteOrder?: ByteOrder): Codec<string>;
+	(char: Codec<number>, options?: Pick<StringOptions, "terminator">, byteOrder?: ByteOrder): Codec<string>;
 } & typeof stringDecoder;
 
 // @ts-expect-error
-export const string: StringFactory = (char, options: any, byteOrder) => {
-	/* eslint-disable ts/no-unsafe-argument, ts/no-unsafe-member-access */
+export const string: StringFactory = (char, options: Partial<StringOptions>, byteOrder) => {
+	 
 	if ("decode" in char && "encode" in char) {
 		return {
 			...stringDecoderTerminated(char, options.terminator, byteOrder),
@@ -110,7 +110,7 @@ export const string: StringFactory = (char, options: any, byteOrder) => {
 	}
 
 	return stringDecoder(char, options, byteOrder);
-	/* eslint-enable */
+	 
 };
 
 export {
