@@ -100,8 +100,11 @@ export type StringFactory = {
 } & typeof stringDecoder;
 
 // @ts-expect-error
-export const string: StringFactory = (char, options: Partial<StringOptions>, byteOrder) => {
-	 
+export const string: StringFactory = (char, options = {}, byteOrder) => {
+	if ("count" in options || "byteLength" in options) {
+		return stringDecoder(char, options as StringOptions, byteOrder);
+	}
+
 	if ("decode" in char && "encode" in char) {
 		return {
 			...stringDecoderTerminated(char, options.terminator, byteOrder),
@@ -110,7 +113,6 @@ export const string: StringFactory = (char, options: Partial<StringOptions>, byt
 	}
 
 	return stringDecoder(char, options, byteOrder);
-	 
 };
 
 export {
