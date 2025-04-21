@@ -95,7 +95,7 @@ export class BinaryData<Buffer extends Uint8Array = Uint8Array> {
 				this.byteOrder = byteOrderOrConfig;
 				this.#bufferSize = bufferSize;
 			} else {
-				this.#bufferSize = byteOrderOrConfig?.bufferSize ?? bufferSize;
+				this.#bufferSize = Math.min(byteOrderOrConfig?.bufferSize ?? bufferSize, this.#byteLength);
 			}
 		} else {
 			this.#byteLength = byteLengthOrSource.byteLength;
@@ -150,7 +150,7 @@ export class BinaryData<Buffer extends Uint8Array = Uint8Array> {
 		await this.seek(offset + byteLength);
 		return new BinaryData(
 			byteLength,
-			(state) => this.#updateBuffer({ offset: offset + state.offset, byteLength: this.#bufferSize, }),
+			(state) => this.#updateBuffer({ offset: offset + state.offset, byteLength: state.byteLength, }),
 			this.byteOrder,
 			{ bufferSize: this.#bufferSize, },
 		);
