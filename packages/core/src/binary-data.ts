@@ -17,7 +17,7 @@ export type UpdateBufferState = {
 	readonly byteLength: number;
 };
 
-export type UpdateBufferFunction<Buffer extends Uint8Array> = (state: UpdateBufferState) => Promise<Buffer>;
+export type UpdateBufferFunction = (state: UpdateBufferState) => Promise<Uint8Array>;
 
 export type BinaryDataConfig = {
 	readonly bufferSize: number;
@@ -51,17 +51,17 @@ export type FindOptions = Simplify<SeekOptions & {
 // unfortunately it's not possible to just include specific definitions from TS's DOM lib or @types/node
 declare var setTimeout: (callback: (...args: unknown[]) => unknown, delay?: number) => void;
 
-export class BinaryData<Buffer extends Uint8Array = Uint8Array> {
+export class BinaryData {
 	#byteLength: number;
-	#updateBuffer: UpdateBufferFunction<Buffer>;
-	#buffer: Buffer | undefined;
+	#updateBuffer: UpdateBufferFunction;
+	#buffer: Uint8Array | undefined;
 	#offset: number;
 	#bufferStart: number;
 	#bufferSize: number;
 
 	byteOrder: ByteOrder | undefined;
 
-	get buffer(): Buffer {
+	get buffer(): Uint8Array {
 		if (!this.#buffer) {
 			throw new ReferenceError("The buffer hasn't been initialized yet. Any of the asynchronous methods can be used to do so, e.g. `await seek(0)`");
 		}
@@ -81,19 +81,19 @@ export class BinaryData<Buffer extends Uint8Array = Uint8Array> {
 		return this.#bufferStart;
 	}
 
-	constructor(byteLength: number, updateBuffer: UpdateBufferFunction<Buffer>, config: BinaryDataConfig);
-	constructor(byteLength: number, updateBuffer: UpdateBufferFunction<Buffer>, byteOrder?: ByteOrder, config?: BinaryDataConfig);
-	constructor(source: Buffer, byteOrder?: ByteOrder);
-	constructor(byteLengthOrSource: number | Buffer, updateBufferOrByteOrder?: UpdateBufferFunction<Buffer> | ByteOrder, byteOrderOrConfig?: ByteOrder | BinaryDataConfig, { bufferSize = 2 ** 20 * 10, } = {}) {
+	constructor(byteLength: number, updateBuffer: UpdateBufferFunction, config: BinaryDataConfig);
+	constructor(byteLength: number, updateBuffer: UpdateBufferFunction, byteOrder?: ByteOrder, config?: BinaryDataConfig);
+	constructor(source: Uint8Array, byteOrder?: ByteOrder);
+	constructor(byteLengthOrSource: number | Uint8Array, updateBufferOrByteOrder?: UpdateBufferFunction | ByteOrder, byteOrderOrConfig?: ByteOrder | BinaryDataConfig, { bufferSize = 2 ** 20 * 10, } = {}) {
 		this.#offset = 0;
 		this.#bufferStart = 0;
 
 		if (typeof byteLengthOrSource === "number") {
 			this.#byteLength = byteLengthOrSource;
-			this.#updateBuffer = updateBufferOrByteOrder as UpdateBufferFunction<Buffer>;
+			this.#updateBuffer = updateBufferOrByteOrder as UpdateBufferFunction;
 			if (byteOrderOrConfig instanceof ByteOrder) {
 				this.byteOrder = byteOrderOrConfig;
-				this.#bufferSize = bufferSize;
+				this.#bufferSize = Math.min(bufferSize, this.#byteLength);
 			} else {
 				this.#bufferSize = Math.min(byteOrderOrConfig?.bufferSize ?? bufferSize, this.#byteLength);
 			}
@@ -102,7 +102,7 @@ export class BinaryData<Buffer extends Uint8Array = Uint8Array> {
 			this.byteOrder = updateBufferOrByteOrder as ByteOrder;
 			this.#bufferSize = this.#byteLength;
 			this.#buffer = byteLengthOrSource;
-			this.#updateBuffer = async ({ offset, }) => byteLengthOrSource.subarray(offset, this.#byteLength) as Buffer;
+			this.#updateBuffer = async ({ offset, }) => byteLengthOrSource.subarray(offset, this.#byteLength);
 		}
 	}
 
@@ -146,8 +146,15 @@ export class BinaryData<Buffer extends Uint8Array = Uint8Array> {
 		await this.skip(((-this.#offset % to) + to) % to);
 	}
 
-	async slice(byteLength: number, { offset = this.#offset, }: SeekOptions = {}): Promise<BinaryData<Buffer>> {
-		await this.seek(offset + byteLength);
+	async slice(byteLength: number, { offset = this.#offset, }: SeekOptions = {}): Promise<BinaryData> {
+		await this.seek(offset);
+
+		if (byteLength < this.#bufferSize) {
+			return new BinaryData(await this.read(byteLength), this.byteOrder);
+		}
+
+		await this.skip(byteLength);
+
 		return new BinaryData(
 			byteLength,
 			(state) => this.#updateBuffer({ offset: offset + state.offset, byteLength: state.byteLength, }),
