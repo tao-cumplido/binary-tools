@@ -5,7 +5,7 @@ import { BinaryData as Base, ByteOrder, type BinaryDataConfig } from "@binary-to
 
 export * from "@binary-tools/core";
 
-export class BinaryData extends Base<Buffer> {
+export class BinaryData extends Base {
 	#fileHandle: FileHandle;
 
 	get fileHandle(): FileHandle {
