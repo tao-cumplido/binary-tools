@@ -3,7 +3,7 @@ import { EncodeError } from "#datatypes/errors.ts";
 
 import { encodingName, isInvalidUnicodeCodePoint, type Char } from "../util.ts";
 
-export const CharIso8859_1Encoder = {
+export const CharIso8859_1Encoder: Char<EncoderObject<number>> = {
 	[encodingName]: "ISO 8859-1",
 	encode: (code) => {
 		if (code < 0x20 || (code >= 0x7f && code < 0xa0) || isInvalidUnicodeCodePoint(code)) {
@@ -12,4 +12,4 @@ export const CharIso8859_1Encoder = {
 
 		return new Uint8Array([ code, ]);
 	},
-} as const satisfies Char<EncoderObject<number>>;
+};

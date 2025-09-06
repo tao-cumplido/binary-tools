@@ -6,7 +6,7 @@ import { EncodeError } from "#datatypes/errors.ts";
 
 import type { IntEncoderConfig } from "./config.ts";
 
-export const bigintEncoder = ({ byteLength, }: IntEncoderConfig, overrideByteOrder?: ByteOrder) => {
+export const bigintEncoder = ({ byteLength, }: IntEncoderConfig, overrideByteOrder?: ByteOrder): EncoderObject<bigint> => {
 	assertInt(byteLength, { min: 1, });
 
 	return {
@@ -27,7 +27,7 @@ export const bigintEncoder = ({ byteLength, }: IntEncoderConfig, overrideByteOrd
 
 			return result;
 		},
-	} as const satisfies EncoderObject<bigint>;
+	};
 };
 
 export const BigInt64Encoder = bigintEncoder({ byteLength: 8, });

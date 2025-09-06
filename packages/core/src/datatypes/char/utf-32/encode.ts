@@ -4,7 +4,7 @@ import { Int32Encoder } from "#datatypes/int/encode.ts";
 
 import { encodingName, isInvalidUnicodeCodePoint, type Char } from "../util.ts";
 
-export const CharUtf32Encoder = {
+export const CharUtf32Encoder: Char<EncoderObject<number>> = {
 	[encodingName]: "UTF-32",
 	encode: (code, byteOrder) => {
 		if (isInvalidUnicodeCodePoint(code)) {
@@ -13,4 +13,4 @@ export const CharUtf32Encoder = {
 
 		return Int32Encoder.encode(code, byteOrder);
 	},
-} satisfies Char<EncoderObject<number>>;
+};

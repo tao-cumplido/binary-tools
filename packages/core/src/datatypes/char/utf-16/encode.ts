@@ -4,7 +4,7 @@ import { Int16Encoder } from "#datatypes/int/encode.ts";
 
 import { encodingName, isInvalidUnicodeCodePoint, type Char } from "../util.ts";
 
-export const CharUtf16Encoder = {
+export const CharUtf16Encoder: Char<EncoderObject<number>> = {
 	[encodingName]: "UTF-16",
 	encode: (code, byteOrder) => {
 		if (isInvalidUnicodeCodePoint(code)) {
@@ -24,4 +24,4 @@ export const CharUtf16Encoder = {
 
 		return result;
 	},
-} satisfies Char<EncoderObject<number>>;
+};

@@ -7,7 +7,7 @@ import { EncodeError } from "#datatypes/errors.ts";
 
 import type { FloatConfig } from "./config.ts";
 
-export const floatEncoder = ({ byteLength, }: FloatConfig, overrideByteOrder?: ByteOrder) => {
+export const floatEncoder = ({ byteLength, }: FloatConfig, overrideByteOrder?: ByteOrder): EncoderObject<number> => {
 	assertInt(byteLength, { values: [ 2, 4, 8, ], });
 
 	const setFloat = match(byteLength)
@@ -29,7 +29,7 @@ export const floatEncoder = ({ byteLength, }: FloatConfig, overrideByteOrder?: B
 
 				return new Uint8Array(view.buffer);
 			},
-		} as const satisfies EncoderObject<number>;
+		};
 };
 
 export const Float16Encoder = floatEncoder({ byteLength: 2, });

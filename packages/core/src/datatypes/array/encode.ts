@@ -1,7 +1,7 @@
 import type { ByteOrder } from "#byte-order.ts";
 import type { Encoder, EncoderObject } from "#datatypes/encoder.ts";
 
-export const arrayEncoder = <Value>(type: Encoder<Value>, overrideByteOrder?: ByteOrder) => {
+export const arrayEncoder = <Value>(type: Encoder<Value>, overrideByteOrder?: ByteOrder): EncoderObject<readonly Value[]> => {
 	const encodeItem = typeof type === "function" ? type : type.encode;
 
 	return {
@@ -27,5 +27,5 @@ export const arrayEncoder = <Value>(type: Encoder<Value>, overrideByteOrder?: By
 
 			return result;
 		},
-	} as const satisfies EncoderObject<readonly Value[]>;
+	};
 };
