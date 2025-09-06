@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import { ByteOrder } from "#byte-order.js";
-import { EncodeError } from "#datatypes/errors.js";
+import { ByteOrder } from "#byte-order.ts";
+import { EncodeError } from "#datatypes/errors.ts";
 
-import { bigintEncoder } from "./encode.js";
+import { bigintEncoder } from "./encode.ts";
 
-test.describe("encode", () => {
+group("encode", () => {
 	test("big endian", () => {
 		const write = (byteLength: number, value: bigint) => {
 			return bigintEncoder({ byteLength, }).encode(value, ByteOrder.BigEndian);

@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import { DecodeError } from "#datatypes/errors.js";
+import { DecodeError } from "#datatypes/errors.ts";
 
-import { CharAsciiDecoder } from "./decode.js";
+import { CharAsciiDecoder } from "./decode.ts";
 
-test.describe("decode", () => {
+group("decode", () => {
 	test("valid", () => {
 		const buffer = new Uint8Array([ 0x00, 0x7f, ]);
 

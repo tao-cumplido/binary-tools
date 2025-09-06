@@ -1,9 +1,15 @@
-import type { DecoderObject } from "#datatypes/decoder.js";
-import { DecodeError } from "#datatypes/errors.js";
-import { Uint16Decoder } from "#datatypes/int/decode.js";
+import type { DecoderObject } from "#datatypes/decoder.ts";
+import { DecodeError } from "#datatypes/errors.ts";
+import { Uint16Decoder } from "#datatypes/int/decode.ts";
+
+import { encodingName, type Char } from "../util.ts";
 
 export const CharUtf16Decoder = {
-	requiredBufferSize: 4,
+	[encodingName]: "UTF-16",
+	requiredBufferSize: {
+		min: 2,
+		max: 4,
+	},
 	decode: ({ buffer, offset, byteOrder, }) => {
 		const high = Uint16Decoder.decode({ buffer, offset, byteOrder, });
 
@@ -27,4 +33,4 @@ export const CharUtf16Decoder = {
 			source,
 		};
 	},
-} as const satisfies DecoderObject<number>;
+} as const satisfies Char<DecoderObject<number>>;

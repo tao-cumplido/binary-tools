@@ -1,5 +1,5 @@
-import type { DecoderObject, DecoderResult } from "#datatypes/decoder.js";
-import { assertInt } from "#assert.js";
+import type { DecoderObject, DecoderResult } from "#datatypes/decoder.ts";
+import { assertInt } from "#assert.ts";
 
 function identity(value: Uint8Array): DecoderResult<Uint8Array> {
 	return {

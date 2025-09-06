@@ -15,13 +15,27 @@
 	"author": "Tao Cumplido",
 	"repository": "https://github.com/tao-cumplido/binary-tools/tree/main/packages/core",
 	"bugs": "https://github.com/tao-cumplido/binary-tools/issues",
+	"type": "module",
+	"imports": {
+		"#*.ts": {
+			"types": "./src/*.ts",
+			"test": "./src/*.ts",
+			"default": "./dist/*.js"
+		}
+	},
+	"exports": {
+		".": "./dist/entrypoints/index.js",
+		"./decoder": "./dist/entrypoints/decoder.js",
+		"./encoder": "./dist/entrypoints/encoder.js",
+		"./patterns": "./dist/entrypoints/patterns.js"
+	},
 	"scripts": {
 		"build": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
 		"build": {
-			"command": "tscd --pretty",
+			"command": "tsc",
 			"clean": "if-file-deleted",
 			"files": [
 				"src/**/*.ts",
@@ -33,7 +47,7 @@
 			]
 		},
 		"test": {
-			"command": "tsx --tsconfig tsconfig.test.json --conditions tsx --test-reporter @voxpelli/node-test-pretty-reporter --test 'src/**/*.suite.test.ts'",
+			"command": "node --conditions test --test-reporter @voxpelli/node-test-pretty-reporter --test 'src/**/*.suite.test.ts'",
 			"files": [
 				"src/**/*.test.ts",
 				"tsconfig.test.json"
@@ -42,61 +56,8 @@
 	},
 	"dependencies": {
 		"@shigen/enum": "~0.5.0",
-		"type-fest": "^4.39.1",
-		"ts-pattern": "^5.7.0",
+		"type-fest": "^4.41.0",
+		"ts-pattern": "^5.8.0",
 		"regex": "^6.0.1"
-	},
-	"devDependencies": {
-		"@petamoriken/float16": "3.9.2"
-	},
-	"imports": {
-		"#*.js": {
-			"types": "./src/*.js",
-			"tsx": "./src/*.js"
-		}
-	},
-	"exports": {
-		".": {
-			"import": {
-				"types": "./dist/module/entrypoints/index.d.ts",
-				"default": "./dist/module/entrypoints/index.js"
-			},
-			"require": {
-				"types": "./dist/commonjs/entrypoints/index.d.ts",
-				"default": "./dist/commonjs/entrypoints/index.js"
-			}
-		},
-		"./decoder": {
-			"import": {
-				"types": "./dist/module/entrypoints/decoder.d.ts",
-				"default": "./dist/module/entrypoints/decoder.js"
-			},
-			"require": {
-				"types": "./dist/commonjs/entrypoints/decoder.d.ts",
-				"default": "./dist/commonjs/entrypoints/decoder.js"
-			}
-		},
-		"./encoder": {
-			"import": {
-				"types": "./dist/module/entrypoints/encoder.d.ts",
-				"default": "./dist/module/entrypoints/encoder.js"
-			},
-			"require": {
-				"types": "./dist/commonjs/entrypoints/encoder.d.ts",
-				"default": "./dist/commonjs/entrypoints/encoder.js"
-			}
-		},
-		"./patterns": {
-			"import": {
-				"types": "./dist/module/entrypoints/patterns.d.ts",
-				"default": "./dist/module/entrypoints/patterns.js"
-			},
-			"require": {
-				"types": "./dist/commonjs/entrypoints/patterns.d.ts",
-				"default": "./dist/commonjs/entrypoints/patterns.js"
-			}
-		}
-	},
-	"types": "./dist/commonjs/entrypoints/index.d.ts",
-	"main": "./dist/commonjs/entrypoints/index.js"
+	}
 }

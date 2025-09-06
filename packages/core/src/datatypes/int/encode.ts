@@ -1,11 +1,11 @@
 
-import type { ByteOrder } from "#byte-order.js";
-import type { IntEncoderConfig } from "#datatypes/bigint/config.js";
-import type { EncoderObject } from "#datatypes/encoder.js";
-import { assertInt } from "#assert.js";
-import { bigintEncoder } from "#datatypes/bigint/encode.js";
+import type { ByteOrder } from "#byte-order.ts";
+import type { IntEncoderConfig } from "#datatypes/bigint/config.ts";
+import type { EncoderObject } from "#datatypes/encoder.ts";
+import { assertInt } from "#assert.ts";
+import { bigintEncoder } from "#datatypes/bigint/encode.ts";
 
-import type { SafeIntBytes } from "./config.js";
+import type { SafeIntBytes } from "./config.ts";
 
 export const intEncoder = ({ byteLength, }: IntEncoderConfig<SafeIntBytes>, overrideByteOrder?: ByteOrder) => {
 	assertInt(byteLength, { min: 1, max: 6, });

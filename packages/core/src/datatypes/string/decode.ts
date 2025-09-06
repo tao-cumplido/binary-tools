@@ -1,10 +1,10 @@
 import { match, P } from "ts-pattern";
 
-import type { ByteOrder } from "#byte-order.js";
-import { assertInt } from "#assert.js";
-import { arrayDecoder } from "#datatypes/array/decode.js";
-import { getDecoderObject, validateResult, type Decoder, type DecoderObject, type DecoderResult } from "#datatypes/decoder.js";
-import { DecodeError } from "#datatypes/errors.js";
+import type { ByteOrder } from "#byte-order.ts";
+import { assertInt } from "#assert.ts";
+import { arrayDecoder } from "#datatypes/array/decode.ts";
+import { getDecoderObject, resolveRequiredBufferSize, validateResult, type Decoder, type DecoderObject, type DecoderResult } from "#datatypes/decoder.ts";
+import { DecodeError } from "#datatypes/errors.ts";
 
 class StringResult {
 	#sources: Uint8Array[] = [];
@@ -57,6 +57,7 @@ export const stringDecoderFixedByteLength = (char: Decoder<number>, byteLength: 
 	assertInt(byteLength, { min: 1, });
 
 	const { decode: decodeChar, requiredBufferSize, } = getDecoderObject(char);
+	const { max, } = resolveRequiredBufferSize(requiredBufferSize);
 
 	return {
 		requiredBufferSize,
@@ -68,7 +69,7 @@ export const stringDecoderFixedByteLength = (char: Decoder<number>, byteLength: 
 			while (result.byteLength < byteLength) {
 				const { value, source, } = validateResult(await decodeChar({ buffer, offset, byteOrder, }, queryState));
 				result.append(String.fromCodePoint(value), source);
-				({ buffer, offset, } = await queryState(source.byteLength, requiredBufferSize));
+				({ buffer, offset, } = await queryState(source.byteLength, max));
 			}
 
 			if (result.byteLength !== byteLength) {
@@ -84,6 +85,7 @@ export const stringDecoderTerminated = (char: Decoder<number>, terminator = "\0"
 	assertInt(terminator.length, { min: 1, });
 
 	const { decode: decodeChar, requiredBufferSize, } = getDecoderObject(char);
+	const { max, } = resolveRequiredBufferSize(requiredBufferSize);
 
 	return {
 		requiredBufferSize,
@@ -95,14 +97,14 @@ export const stringDecoderTerminated = (char: Decoder<number>, terminator = "\0"
 			let { value, source, } = validateResult(await decodeChar({ buffer, offset, byteOrder, }, queryState));
 			let charValue = String.fromCodePoint(value);
 
-			({ buffer, offset, } = await queryState(source.byteLength, requiredBufferSize));
+			({ buffer, offset, } = await queryState(source.byteLength, max));
 
 
 			while (charValue !== terminator && offset < buffer.byteLength) {
 				result.append(charValue, source);
 				({ value, source, } = validateResult(await decodeChar({ buffer, offset, byteOrder, }, queryState)));
 				charValue = String.fromCodePoint(value);
-				({ buffer, offset, } = await queryState(source.byteLength, requiredBufferSize));
+				({ buffer, offset, } = await queryState(source.byteLength, max));
 			}
 
 			if (charValue !== terminator) {

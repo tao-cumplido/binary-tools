@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import { ByteOrder } from "#byte-order.js";
-import { DecodeError } from "#datatypes/errors.js";
+import { ByteOrder } from "#byte-order.ts";
+import { DecodeError } from "#datatypes/errors.ts";
 
-import { bigintDecoder, errorMessage } from "./decode.js";
+import { bigintDecoder, errorMessage } from "./decode.ts";
 
-test.describe("decode", () => {
+group("decode", () => {
 	test("uint big endian", () => {
 		const buffer = new Uint8Array([
 			0x12,

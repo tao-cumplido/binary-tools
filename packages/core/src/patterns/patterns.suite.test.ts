@@ -1,7 +1,7 @@
-import test from "node:test";
+import { suite as group } from "node:test";
 
-test.describe("patterns", async () => {
-	await import("./backreference.test.js");
-	await import("./range.test.js");
-	await import("./wildcard.test.js");
+group("patterns", async () => {
+	await import("./backreference.test.ts");
+	await import("./range.test.ts");
+	await import("./wildcard.test.ts");
 });

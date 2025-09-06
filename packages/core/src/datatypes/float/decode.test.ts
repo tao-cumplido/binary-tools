@@ -1,25 +1,11 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import { getFloat16, setFloat16 } from "@petamoriken/float16";
+import { ByteOrder } from "#byte-order.ts";
 
-import { ByteOrder } from "#byte-order.js";
+import { floatDecoder } from "./decode.ts";
 
-import { floatDecoder } from "./decode.js";
-
-if (!DataView.prototype.getFloat16) {
-	DataView.prototype.getFloat16 = function (byteOffset: number, littleEndian?: boolean) {
-		return getFloat16(this, byteOffset, littleEndian);
-	};
-}
-
-if (!DataView.prototype.setFloat16) {
-	DataView.prototype.setFloat16 = function (byteOffset: number, value: number, littleEndian?: boolean) {
-		return setFloat16(this, byteOffset, value, littleEndian);
-	};
-}
-
-test.describe("decode", () => {
+group("decode", () => {
 	test("half precision", () => {
 		const view = new DataView(new ArrayBuffer(4));
 		const buffer = new Uint8Array(view.buffer);

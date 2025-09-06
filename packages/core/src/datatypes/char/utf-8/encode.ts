@@ -1,9 +1,10 @@
-import type { EncoderObject } from "#datatypes/encoder.js";
-import { EncodeError } from "#datatypes/errors.js";
+import type { EncoderObject } from "#datatypes/encoder.ts";
+import { EncodeError } from "#datatypes/errors.ts";
 
-import { isInvalidUnicodeCodePoint } from "../util.js";
+import { encodingName, isInvalidUnicodeCodePoint, type Char } from "../util.ts";
 
 export const CharUtf8Encoder = {
+	[encodingName]: "UTF-8",
 	encode: (code) => {
 		if (isInvalidUnicodeCodePoint(code)) {
 			throw new EncodeError(`Invalid Unicode code point`, code);
@@ -35,4 +36,4 @@ export const CharUtf8Encoder = {
 			code & 0x3f | 0x80,
 		]);
 	},
-} as const satisfies EncoderObject<number>;
+} as const satisfies Char<EncoderObject<number>>;

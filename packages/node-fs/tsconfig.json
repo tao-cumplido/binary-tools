@@ -1,15 +1,10 @@
 {
-	"extends": "../../tsconfig.base.json",
+	"extends": "../../tsconfig.build.json",
 	"compilerOptions": {
 		"rootDir": "src",
 		"outDir": "dist",
 		"types": ["node"]
 	},
 	"include": ["src/**/*.ts"],
-	"exclude": ["src/**/*.test.ts"],
-	"ts-dualist": {
-		"exports": {
-			".": "binary-data.ts"
-		}
-	}
+	"exclude": ["src/**/*.test.ts"]
 }

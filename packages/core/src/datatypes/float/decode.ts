@@ -1,11 +1,11 @@
 import { match } from "ts-pattern";
 
-import type { DecoderObject } from "#datatypes/decoder.js";
-import { assertInt } from "#assert.js";
-import { ByteOrder } from "#byte-order.js";
-import { DecodeError } from "#datatypes/errors.js";
+import type { DecoderObject } from "#datatypes/decoder.ts";
+import { assertInt } from "#assert.ts";
+import { ByteOrder } from "#byte-order.ts";
+import { DecodeError } from "#datatypes/errors.ts";
 
-import type { FloatConfig } from "./config.js";
+import type { FloatConfig } from "./config.ts";
 
 export const errorMessage = {
 	noByteOrder: (byteLength: number) => `Cannot decode ${byteLength} bytes float with unspecified byte order`,

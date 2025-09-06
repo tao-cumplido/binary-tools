@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import { rangePattern } from "./range.js";
+import { rangePattern } from "./range.ts";
 
-test.describe("range", () => {
+group("range", () => {
 	test("(4,a)", () => {
 		const validate = rangePattern("(4,a)");
 

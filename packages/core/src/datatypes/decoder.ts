@@ -1,4 +1,5 @@
-import type { ByteOrder } from "#byte-order.js";
+import type { Range } from "#assert.ts";
+import type { ByteOrder } from "#byte-order.ts";
 
 export type DecoderState = {
 	readonly buffer: Uint8Array;
@@ -18,7 +19,7 @@ export type QueryState = (advanceBytes: number, bufferSize?: number) => Promise<
 export type DecoderFunction<T> = (initialState: DecoderState, queryState: QueryState) => DecoderResult<T> | Promise<DecoderResult<T>>;
 
 export type DecoderObject<T> = {
-	readonly requiredBufferSize: number;
+	readonly requiredBufferSize: number | Required<Range>;
 	readonly decode: DecoderFunction<T>;
 };
 
@@ -33,6 +34,17 @@ export function getDecoderObject<T>(decoder: Decoder<T>): DecoderObject<T> {
 	}
 
 	return decoder;
+}
+
+export function resolveRequiredBufferSize(size: number | Required<Range>): Required<Range> {
+	if (typeof size === "number") {
+		return {
+			min: size,
+			max: size,
+		};
+	}
+
+	return size;
 }
 
 export function validateResult<T>(result: DecoderResult<T>, message = ""): DecoderResult<T> {

@@ -36,7 +36,7 @@ export default typegen([
 			"stylistic/comma-spacing": [ "error", { before: false, after: true, }, ],
 			"stylistic/array-bracket-spacing": [ "error", "always", ],
 			"stylistic/object-curly-spacing": [ "error", "always", ],
-			"unused-imports/no-unused-imports": [ "error", ],
+			"unused-imports/no-unused-imports": [ "error", { varsIgnorePattern: "encodingName", }, ],
 		},
 	},
 	{
@@ -45,9 +45,7 @@ export default typegen([
 			// @ts-ignore
 			parser: tseslint.parser,
 			parserOptions: {
-				projectService: {
-					defaultProject: "./tsconfig.json",
-				},
+				projectService: true,
 			},
 		},
 		plugins: {
@@ -72,7 +70,7 @@ export default typegen([
 			"ts/no-floating-promises": [ "error", { allowForKnownSafeCalls: [ {
 				from: "package",
 				package: "node:test",
-				name: [ "test", "describe", "todo", ],
+				name: [ "test", "suite", "todo", ],
 			}, ], }, ],
 			"ts/consistent-type-imports": [ "error", { fixStyle: "inline-type-imports", }, ],
 		},

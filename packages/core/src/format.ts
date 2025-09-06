@@ -1,4 +1,4 @@
-import { assertInt } from "#assert.js";
+import { assertInt } from "#assert.ts";
 
 export function hexByte(value: number | undefined) {
 	assertInt(value, { min: 0x00, max: 0xff, });

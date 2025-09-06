@@ -1,10 +1,10 @@
 
-import type { DecoderObject } from "#datatypes/decoder.js";
-import { assertInt } from "#assert.js";
-import { ByteOrder } from "#byte-order.js";
-import { DecodeError } from "#datatypes/errors.js";
+import type { DecoderObject } from "#datatypes/decoder.ts";
+import { assertInt } from "#assert.ts";
+import { ByteOrder } from "#byte-order.ts";
+import { DecodeError } from "#datatypes/errors.ts";
 
-import type { IntDecoderConfig } from "./config.js";
+import type { IntDecoderConfig } from "./config.ts";
 
 export const errorMessage = {
 	noByteOrder: (byteLength: number) => `Cannot decode ${byteLength} bytes integer with unspecified byte order`,

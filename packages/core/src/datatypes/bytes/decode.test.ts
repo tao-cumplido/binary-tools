@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import { asyncBuffer } from "#datatypes/util.test.js";
+import { asyncBuffer } from "#datatypes/util.test.ts";
 
-import { bytesDecoder } from "./decode.js";
+import { bytesDecoder } from "./decode.ts";
 
-test.describe("decode", () => {
+group("decode", () => {
 	test("boundaries", async () => {
 		const buffer = new Uint8Array([ 0, 1, 2, 3, 4, 5, ]);
 		const decoder = bytesDecoder(5);

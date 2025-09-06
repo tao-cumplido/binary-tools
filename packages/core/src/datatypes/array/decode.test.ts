@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import type { DecoderFunction } from "#datatypes/decoder.js";
-import { asyncBuffer } from "#datatypes/util.test.js";
+import type { DecoderFunction } from "#datatypes/decoder.ts";
+import { asyncBuffer } from "#datatypes/util.test.ts";
 
-import { arrayDecoder } from "./decode.js";
+import { arrayDecoder } from "./decode.ts";
 
 const Uint8: DecoderFunction<number | undefined> = ({ buffer, offset, }) => {
 	return {
@@ -13,7 +13,7 @@ const Uint8: DecoderFunction<number | undefined> = ({ buffer, offset, }) => {
 	};
 };
 
-test.describe("decode", () => {
+group("decode", () => {
 	test("single byte", async () => {
 		const buffer = new Uint8Array([ 0, 1, 2, 3, ]);
 		const decoder = arrayDecoder(Uint8, 2);

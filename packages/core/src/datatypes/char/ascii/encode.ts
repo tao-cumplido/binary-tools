@@ -1,9 +1,10 @@
-import type { EncoderObject } from "#datatypes/encoder.js";
-import { EncodeError } from "#datatypes/errors.js";
+import type { EncoderObject } from "#datatypes/encoder.ts";
+import { EncodeError } from "#datatypes/errors.ts";
 
-import { isInvalidUnicodeCodePoint } from "../util.js";
+import { encodingName, isInvalidUnicodeCodePoint, type Char } from "../util.ts";
 
 export const CharAsciiEncoder = {
+	[encodingName]: "ASCII",
 	encode: (code) => {
 		if (code >= 0x80 || isInvalidUnicodeCodePoint(code)) {
 			throw new EncodeError(`Invalid ASCII code point.`, code);
@@ -11,4 +12,4 @@ export const CharAsciiEncoder = {
 
 		return new Uint8Array([ code, ]);
 	},
-} as const satisfies EncoderObject<number>;
+} as const satisfies Char<EncoderObject<number>>;

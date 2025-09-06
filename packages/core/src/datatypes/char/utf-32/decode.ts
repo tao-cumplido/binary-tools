@@ -1,10 +1,11 @@
-import type { DecoderObject } from "#datatypes/decoder.js";
-import { DecodeError } from "#datatypes/errors.js";
-import { Uint32Decoder } from "#datatypes/int/decode.js";
+import type { DecoderObject } from "#datatypes/decoder.ts";
+import { DecodeError } from "#datatypes/errors.ts";
+import { Uint32Decoder } from "#datatypes/int/decode.ts";
 
-import { isInvalidUnicodeCodePoint } from "../util.js";
+import { encodingName, isInvalidUnicodeCodePoint, type Char } from "../util.ts";
 
 export const CharUtf32Decoder = {
+	[encodingName]: "UTF-32",
 	requiredBufferSize: 4,
 	decode: ({ buffer, offset, byteOrder, }) => {
 		const { value, source, } = Uint32Decoder.decode({ buffer, offset, byteOrder, });
@@ -18,4 +19,4 @@ export const CharUtf32Decoder = {
 			source,
 		};
 	},
-} as const satisfies DecoderObject<number>;
+} as const satisfies Char<DecoderObject<number>>;

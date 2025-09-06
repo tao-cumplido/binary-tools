@@ -1,7 +1,7 @@
 import { regex } from "regex";
 import { match, P } from "ts-pattern";
 
-import { reHexDigit, type ByteValidator, type Pattern, type PatternRegExp } from "./shared.js";
+import { reHexDigit, type ByteValidator, type Pattern, type PatternRegExp } from "./shared.ts";
 
 export const reWildcard = regex`^
 	(?<upper>${reHexDigit}|\?)

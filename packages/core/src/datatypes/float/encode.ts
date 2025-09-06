@@ -1,11 +1,11 @@
 import { match } from "ts-pattern";
 
-import type { EncoderObject } from "#datatypes/encoder.js";
-import { assertInt } from "#assert.js";
-import { ByteOrder } from "#byte-order.js";
-import { EncodeError } from "#datatypes/errors.js";
+import type { EncoderObject } from "#datatypes/encoder.ts";
+import { assertInt } from "#assert.ts";
+import { ByteOrder } from "#byte-order.ts";
+import { EncodeError } from "#datatypes/errors.ts";
 
-import type { FloatConfig } from "./config.js";
+import type { FloatConfig } from "./config.ts";
 
 export const floatEncoder = ({ byteLength, }: FloatConfig, overrideByteOrder?: ByteOrder) => {
 	assertInt(byteLength, { values: [ 2, 4, 8, ], });

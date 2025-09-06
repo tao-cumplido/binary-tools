@@ -1,4 +1,4 @@
-import type { ByteValidator, Pattern } from "./shared.js";
+import type { ByteValidator, Pattern } from "./shared.ts";
 
 const registry = new Set<Pattern>();
 const cache = new Map<string, ByteValidator>();

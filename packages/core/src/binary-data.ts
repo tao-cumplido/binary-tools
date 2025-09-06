@@ -1,16 +1,13 @@
 import type { Simplify } from "type-fest";
 import { match, P } from "ts-pattern";
 
-import { assertInt } from "#assert.js";
-import { ByteOrder } from "#byte-order.js";
-import { bytesDecoder } from "#datatypes/bytes/decode.js";
-import { CharAsciiDecoder } from "#datatypes/char/ascii/decode.js";
-import { getDecoderObject, type Decoder, type DecoderResult } from "#datatypes/decoder.js";
-import { intDecoder, Uint8Decoder } from "#datatypes/int/decode.js";
-import { stringDecoderFixedCount } from "#datatypes/string/decode.js";
-import { hexByte } from "#format.js";
-import { matchPattern } from "#patterns/match.js";
-import { ReadMode } from "#read-mode.js";
+import { assertInt } from "#assert.ts";
+import { ByteOrder } from "#byte-order.ts";
+import { bytesDecoder } from "#datatypes/bytes/decode.ts";
+import { getDecoderObject, resolveRequiredBufferSize, type Decoder, type DecoderResult } from "#datatypes/decoder.ts";
+import { intDecoder, Uint8Decoder } from "#datatypes/int/decode.ts";
+import { matchPattern } from "#patterns/match.ts";
+import { ReadMode } from "#read-mode.ts";
 
 export type UpdateBufferState = {
 	readonly offset: number;
@@ -121,7 +118,7 @@ export class BinaryData {
 		const offset = this.#offset + delta;
 
 		if (bufferOffset + delta < 0 || bufferOffset + delta + requiredByteLength >= buffer.byteLength) {
-			this.#buffer = await this.#updateBuffer({ offset, byteLength: this.#bufferSize, });
+			this.#buffer = await this.#updateBuffer({ offset, byteLength: Math.min(this.#bufferSize, this.#byteLength - offset), });
 			this.#bufferStart = offset;
 		}
 
@@ -174,24 +171,14 @@ export class BinaryData {
 		}
 	}
 
-	async assertMagic(magic: string | Uint8Array, { offset = this.#offset, }: SeekOptions = {}): Promise<void> {
+	async assert(value: ArrayLike<number> & Iterable<number>, { offset = this.#offset, }: SeekOptions = {}): Promise<void> {
 		await this.seek(offset);
+		const source = await this.read(value.length);
 
-		if (typeof magic === "string") {
-			const value = await this.read(stringDecoderFixedCount(CharAsciiDecoder, magic.length));
-
-			if (magic !== value) {
-				throw new TypeError(`Invalid magic: expected '${magic}', got '${value}'`);
-			}
-
-			return;
-		}
-
-		const value = await this.read(magic.length);
-
-		for (let i = 0; i < value.length; i++) {
-			if (value[i] !== magic[i]) {
-				throw new TypeError(`Invalid magic: expected ${hexByte(magic[i])} at position ${i}, got ${hexByte(value[i])}`);
+		for (let i = 0; i < source.length; i++) {
+			if (source[i] !== value[i]) {
+				await this.seek(offset);
+				throw new Error(`Assertion failed: expected ${[ ...value, ]}, got ${[ ...source, ]}`);
 			}
 		}
 	}
@@ -214,12 +201,13 @@ export class BinaryData {
 		}
 
 		const { decode, requiredBufferSize, } = getDecoderObject(type);
+		const { max, } = resolveRequiredBufferSize(requiredBufferSize);
 
-		if (requiredBufferSize > this.#bufferSize) {
-			throw new Error(`Given decoders requires a buffer size of ${requiredBufferSize} but this instance's buffer size is ${this.#bufferSize}.`);
+		if (max > this.#bufferSize) {
+			throw new Error(`Given decoders requires a buffer size of ${max} but this instance's buffer size is ${this.#bufferSize}.`);
 		}
 
-		await this.#checkBufferBounds(0, requiredBufferSize);
+		await this.#checkBufferBounds(0, max);
 
 		const initialOffset = this.#offset;
 
@@ -265,13 +253,13 @@ export class BinaryData {
 		);
 	}
 
-	async *search(sequence: readonly SearchItem[], { offset = this.#offset, microTaskByteLength = 100, signal, }: FindOptions = {}): AsyncGenerator<SearchProgress, void> {
+	async *search(sequence: Iterable<SearchItem>, { offset = this.#offset, microTaskByteLength = 100, signal, }: FindOptions = {}): AsyncGenerator<SearchProgress, void> {
 		assertInt(microTaskByteLength, { min: 1, });
 
 		signal?.throwIfAborted();
 
 		const temp = new BinaryData(this.#byteLength, this.#updateBuffer, this.byteOrder, { bufferSize: this.#bufferSize, });
-		const validatedSequence = this.#validateSearchSequence(sequence, temp);
+		const validatedSequence = this.#validateSearchSequence([ ...sequence, ], temp);
 
 		progress: for (let searchOffset = offset; searchOffset <= temp.#byteLength; searchOffset++) {
 			if ((searchOffset - offset) % microTaskByteLength === 0) {
@@ -304,7 +292,7 @@ export class BinaryData {
 		}
 	}
 
-	async find(sequence: readonly SearchItem[], options?: FindOptions): Promise<number | null> {
+	async find(sequence: Iterable<SearchItem>, options?: FindOptions): Promise<number | null> {
 		for await (const { offset, matchByteLength, } of this.search(sequence, options)) {
 			if (matchByteLength) {
 				await this.seek(offset + matchByteLength);

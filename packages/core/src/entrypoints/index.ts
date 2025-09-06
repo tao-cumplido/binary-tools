@@ -1,36 +1,37 @@
 
-import type { ByteOrder } from "#byte-order.js";
-import type { Codec } from "#datatypes/codec.js";
-import { arrayDecoder } from "#datatypes/array/decode.js";
-import { arrayEncoder } from "#datatypes/array/encode.js";
-import { bigintDecoder } from "#datatypes/bigint/decode.js";
-import { bigintEncoder } from "#datatypes/bigint/encode.js";
-import { bytesDecoder } from "#datatypes/bytes/decode.js";
-import { bytesEncoder } from "#datatypes/bytes/encode.js";
-import { CharAsciiDecoder } from "#datatypes/char/ascii/decode.js";
-import { CharAsciiEncoder } from "#datatypes/char/ascii/encode.js";
-import { CharIso8859_1Decoder } from "#datatypes/char/iso-8859-1/decode.js";
-import { CharIso8859_1Encoder } from "#datatypes/char/iso-8859-1/encode.js";
-import { CharUtf8Decoder } from "#datatypes/char/utf-8/decode.js";
-import { CharUtf8Encoder } from "#datatypes/char/utf-8/encode.js";
-import { CharUtf16Decoder } from "#datatypes/char/utf-16/decode.js";
-import { CharUtf16Encoder } from "#datatypes/char/utf-16/encode.js";
-import { CharUtf32Decoder } from "#datatypes/char/utf-32/decode.js";
-import { CharUtf32Encoder } from "#datatypes/char/utf-32/encode.js";
-import { floatDecoder } from "#datatypes/float/decode.js";
-import { floatEncoder } from "#datatypes/float/encode.js";
-import { intDecoder } from "#datatypes/int/decode.js";
-import { intEncoder } from "#datatypes/int/encode.js";
-import { stringDecoder, stringDecoderTerminated, type StringOptions } from "#datatypes/string/decode.js";
-import { stringEncoder } from "#datatypes/string/encode.js";
+import type { ByteOrder } from "#byte-order.ts";
+import type { encodingName, Char } from "#datatypes/char/util.ts";
+import type { Codec } from "#datatypes/codec.ts";
+import { arrayDecoder } from "#datatypes/array/decode.ts";
+import { arrayEncoder } from "#datatypes/array/encode.ts";
+import { bigintDecoder } from "#datatypes/bigint/decode.ts";
+import { bigintEncoder } from "#datatypes/bigint/encode.ts";
+import { bytesDecoder } from "#datatypes/bytes/decode.ts";
+import { bytesEncoder } from "#datatypes/bytes/encode.ts";
+import { CharAsciiDecoder } from "#datatypes/char/ascii/decode.ts";
+import { CharAsciiEncoder } from "#datatypes/char/ascii/encode.ts";
+import { CharIso8859_1Decoder } from "#datatypes/char/iso-8859-1/decode.ts";
+import { CharIso8859_1Encoder } from "#datatypes/char/iso-8859-1/encode.ts";
+import { CharUtf8Decoder } from "#datatypes/char/utf-8/decode.ts";
+import { CharUtf8Encoder } from "#datatypes/char/utf-8/encode.ts";
+import { CharUtf16Decoder } from "#datatypes/char/utf-16/decode.ts";
+import { CharUtf16Encoder } from "#datatypes/char/utf-16/encode.ts";
+import { CharUtf32Decoder } from "#datatypes/char/utf-32/decode.ts";
+import { CharUtf32Encoder } from "#datatypes/char/utf-32/encode.ts";
+import { floatDecoder } from "#datatypes/float/decode.ts";
+import { floatEncoder } from "#datatypes/float/encode.ts";
+import { intDecoder } from "#datatypes/int/decode.ts";
+import { intEncoder } from "#datatypes/int/encode.ts";
+import { stringDecoder, stringDecoderTerminated, type StringOptions } from "#datatypes/string/decode.ts";
+import { stringEncoder } from "#datatypes/string/encode.ts";
 
-import type { Decoder, FloatConfig, IntDecoderConfig as IntConfig, SafeIntBytes } from "./decoder.js";
-import type { Encoder } from "./encoder.js";
+import type { Decoder, FloatConfig, IntDecoderConfig as IntConfig, SafeIntBytes } from "./decoder.ts";
+import type { Encoder } from "./encoder.ts";
 
-export type { Codec } from "#datatypes/codec.js";
+export type { Codec } from "#datatypes/codec.ts";
 
-export { DecodeError, type Decoder } from "./decoder.js";
-export { EncodeError, type Encoder } from "./encoder.js";
+export { DecodeError, type Decoder } from "./decoder.ts";
+export { EncodeError, type Encoder } from "./encoder.ts";
 
 export const bigint = (config: IntConfig, byteOrder?: ByteOrder) => {
 	return {
@@ -67,11 +68,11 @@ export const Float16 = float({ byteLength: 2, });
 export const Float32 = float({ byteLength: 4, });
 export const Float64 = float({ byteLength: 8, });
 
-export const CharAscii = { ...CharAsciiDecoder, ...CharAsciiEncoder, } satisfies Codec<number>;
-export const CharIso8859_1 = { ...CharIso8859_1Decoder, ...CharIso8859_1Encoder, } satisfies Codec<number>;
-export const CharUtf8 = { ...CharUtf8Decoder, ...CharUtf8Encoder, } satisfies Codec<number>;
-export const CharUtf16 = { ...CharUtf16Decoder, ...CharUtf16Encoder, } satisfies Codec<number>;
-export const CharUtf32 = { ...CharUtf32Decoder, ...CharUtf32Encoder, } satisfies Codec<number>;
+export const CharAscii = { ...CharAsciiDecoder, ...CharAsciiEncoder, } satisfies Char<Codec<number>>;
+export const CharIso8859_1 = { ...CharIso8859_1Decoder, ...CharIso8859_1Encoder, } satisfies Char<Codec<number>>;
+export const CharUtf8 = { ...CharUtf8Decoder, ...CharUtf8Encoder, } satisfies Char<Codec<number>>;
+export const CharUtf16 = { ...CharUtf16Decoder, ...CharUtf16Encoder, } satisfies Char<Codec<number>>;
+export const CharUtf32 = { ...CharUtf32Decoder, ...CharUtf32Encoder, } satisfies Char<Codec<number>>;
 
 // @ts-expect-error
 export const bytes: typeof bytesDecoder & typeof bytesEncoder = (count?: number) => {
@@ -124,8 +125,7 @@ export {
 	type SeekOptions,
 	type UpdateBufferFunction,
 	type UpdateBufferState,
-} from "#binary-data.js";
+} from "#binary-data.ts";
 
-export { ByteOrder } from "#byte-order.js";
-export { ReadMode } from "#read-mode.js";
-export { repeat } from "#repeat.js";
+export { ByteOrder } from "#byte-order.ts";
+export { ReadMode } from "#read-mode.ts";

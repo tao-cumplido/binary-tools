@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import { ByteOrder } from "#byte-order.js";
-import { DecodeError } from "#datatypes/errors.js";
+import { ByteOrder } from "#byte-order.ts";
+import { DecodeError } from "#datatypes/errors.ts";
 
-import { CharUtf32Decoder } from "./decode.js";
+import { CharUtf32Decoder } from "./decode.ts";
 
-test.describe("decode", () => {
+group("decode", () => {
 	test("valid", () => {
 		const buffer = new Uint8Array([
 			...[ 0x00, 0x00, 0xd7, 0xff, ],

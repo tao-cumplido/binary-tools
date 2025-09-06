@@ -1,12 +1,12 @@
-import type { ByteOrder } from "#byte-order.js";
-import type { Encoder, EncoderObject } from "#datatypes/encoder.js";
-import { arrayEncoder } from "#datatypes/array/encode.js";
+import type { ByteOrder } from "#byte-order.ts";
+import type { Encoder, EncoderObject } from "#datatypes/encoder.ts";
+import { arrayEncoder } from "#datatypes/array/encode.ts";
 
 export type StringEncoderConfig = {
 	readonly terminator?: string;
 };
 
-export const stringEncoder = (char: Encoder<number>, { terminator = "\0", }: StringEncoderConfig = {}, overrideByteOrder?: ByteOrder) => {
+export const stringEncoder = (char: Encoder<number>, { terminator = "", }: StringEncoderConfig = {}, overrideByteOrder?: ByteOrder) => {
 	const array = arrayEncoder(char, overrideByteOrder);
 
 	return {

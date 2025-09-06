@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import { backreferencePattern } from "./backreference.js";
+import { backreferencePattern } from "./backreference.ts";
 
-test.describe("backreference arithmetic", () => {
+group("backreference arithmetic", () => {
 	test("$0", () => {
 		const validate = backreferencePattern("$0");
 

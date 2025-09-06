@@ -1,4 +1,4 @@
-import type { EncoderObject } from "#datatypes/encoder.js";
+import type { EncoderObject } from "#datatypes/encoder.ts";
 
 export const bytesEncoder = () => {
 	return {

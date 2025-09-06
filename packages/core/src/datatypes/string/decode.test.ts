@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import type { DecoderObject } from "#datatypes/decoder.js";
-import { asyncBuffer } from "#datatypes/util.test.js";
+import type { DecoderObject } from "#datatypes/decoder.ts";
+import { asyncBuffer } from "#datatypes/util.test.ts";
 
-import { stringDecoderFixedByteLength, stringDecoderFixedCount, stringDecoderTerminated } from "./decode.js";
+import { stringDecoderFixedByteLength, stringDecoderFixedCount, stringDecoderTerminated } from "./decode.ts";
 
 const Char8: DecoderObject<number> = {
 	requiredBufferSize: 1,
@@ -30,7 +30,7 @@ const Char16: DecoderObject<number> = {
 	},
 };
 
-test.describe("async", () => {
+group("async", () => {
 	test("fixed char count", async () => {
 		const buffer = new Uint8Array([ 0x61, 0x62, 0x63, ]);
 		const decoder = stringDecoderFixedCount(Char8, 2);

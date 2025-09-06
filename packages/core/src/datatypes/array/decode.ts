@@ -1,9 +1,8 @@
 import type { ReadonlyTuple, Writable } from "type-fest";
 
-import type { ByteOrder } from "#byte-order.js";
-import { assertInt } from "#assert.js";
-import { getDecoderObject, validateResult, type Decoder, type DecoderObject, type DecoderResult } from "#datatypes/decoder.js";
-import { repeat } from "#repeat.js";
+import type { ByteOrder } from "#byte-order.ts";
+import { assertInt } from "#assert.ts";
+import { getDecoderObject, resolveRequiredBufferSize, validateResult, type Decoder, type DecoderObject, type DecoderResult } from "#datatypes/decoder.ts";
 
 type ArrayResult<Value, Count extends number> = Writable<ReadonlyTuple<Value, Count>>;
 
@@ -36,28 +35,29 @@ export const arrayDecoder = <Value, Count extends number>(type: Decoder<Value>, 
 	assertInt(count, { min: 0, });
 
 	const { decode: decodeItem, requiredBufferSize, } = getDecoderObject(type);
+	const { max, } = resolveRequiredBufferSize(requiredBufferSize);
 
 	return {
 		requiredBufferSize,
 		decode: async ({ buffer, offset, byteOrder, }, queryState) => {
 			byteOrder = overrideByteOrder ?? byteOrder;
 
-			const items = await repeat(count, async (index) => {
+			const items: DecoderResult<Value>[] = [];
+
+			for (let i = 0; i < count; i++) {
 				const potentialResult = decodeItem({ buffer, offset, byteOrder, }, queryState);
 
 				if (potentialResult instanceof Promise) {
 					const result = await potentialResult;
-					validateResult(result, errorMessage.invalidItem(index));
+					validateResult(result, errorMessage.invalidItem(i));
 					({ buffer, offset, } = await queryState(0));
-					return result;
+					items.push(result);
+				} else {
+					validateResult(potentialResult, errorMessage.invalidItem(i));
+					({ buffer, offset, } = await queryState(potentialResult.source.byteLength, max));
+					items.push(potentialResult);
 				}
-
-				validateResult(potentialResult, errorMessage.invalidItem(index));
-
-				({ buffer, offset, } = await queryState(potentialResult.source.byteLength, requiredBufferSize));
-
-				return potentialResult;
-			});
+			}
 
 			return combine(items) as DecoderResult<ArrayResult<Value, Count>>;
 		},

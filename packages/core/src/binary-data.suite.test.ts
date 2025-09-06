@@ -1,22 +1,22 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import { ByteOrder } from "#byte-order.js";
-import { CharUtf8Decoder } from "#datatypes/char/utf-8/decode.js";
-import { Uint8Decoder, Uint16Decoder } from "#datatypes/int/decode.js";
-import { stringDecoder } from "#datatypes/string/decode.js";
-import { backreferencePattern } from "#patterns/backreference.js";
-import { registerPatterns, MatchError } from "#patterns/match.js";
-import { wildcardPattern } from "#patterns/wildcard.js";
-import { ReadMode } from "#read-mode.js";
+import { ByteOrder } from "#byte-order.ts";
+import { CharUtf8Decoder } from "#datatypes/char/utf-8/decode.ts";
+import { Uint8Decoder, Uint16Decoder } from "#datatypes/int/decode.ts";
+import { stringDecoder } from "#datatypes/string/decode.ts";
+import { backreferencePattern } from "#patterns/backreference.ts";
+import { registerPatterns, MatchError } from "#patterns/match.ts";
+import { wildcardPattern } from "#patterns/wildcard.ts";
+import { ReadMode } from "#read-mode.ts";
 
-import { BinaryData, type UpdateBufferFunction } from "./binary-data.js";
+import { BinaryData, type UpdateBufferFunction } from "./binary-data.ts";
 
-function updateBuffer(source: Uint8Array): UpdateBufferFunction<Uint8Array> {
+function updateBuffer(source: Uint8Array): UpdateBufferFunction {
 	return async ({ offset, byteLength, }) => source.subarray(offset, offset + byteLength);
 }
 
-test.describe("BinaryData", () => {
+group("BinaryData", () => {
 	test("hasNext", () => {
 		const source = new Uint8Array(2);
 		const data = new BinaryData(source.byteLength, updateBuffer(source));
@@ -29,7 +29,7 @@ test.describe("BinaryData", () => {
 		assert.throws(() => data.hasNext(0));
 	});
 
-	test.describe("seek", () => {
+	group("seek", () => {
 		test("with updateBuffer", async () => {
 			const source = new Uint8Array([ 0, 1, 2, 3, 4, ]);
 			const data = new BinaryData(source.byteLength, updateBuffer(source), { bufferSize: 2, });
@@ -117,9 +117,9 @@ test.describe("BinaryData", () => {
 	test.todo("align");
 	test.todo("slice");
 	test.todo("readByteOrderMark");
-	test.todo("assertMagic");
+	test.todo("assert");
 
-	test.describe("read", () => {
+	group("read", () => {
 		test.todo("byteLength");
 
 		test("utf-8 string buffer bounds", async () => {
@@ -187,7 +187,7 @@ test.describe("BinaryData", () => {
 		assert(r.done);
 	});
 
-	test.describe("find", () => {
+	group("find", () => {
 		test("empty source", async () => {
 			const source = new Uint8Array(0);
 			const data = new BinaryData(source.byteLength, updateBuffer(source), { bufferSize: 2, });

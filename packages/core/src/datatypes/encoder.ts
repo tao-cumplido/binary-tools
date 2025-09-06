@@ -1,4 +1,4 @@
-import type { ByteOrder } from "#byte-order.js";
+import type { ByteOrder } from "#byte-order.ts";
 
 export type EncoderFunction<T> = (value: T, byteOrder?: ByteOrder) => Uint8Array;
 

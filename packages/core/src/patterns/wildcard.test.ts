@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { suite as group, test } from "node:test";
 
-import { wildcardPattern } from "./wildcard.js";
+import { wildcardPattern } from "./wildcard.ts";
 
-test.describe("wildcard", () => {
+group("wildcard", () => {
 	test("??", () => {
 		const validate = wildcardPattern("??");
 

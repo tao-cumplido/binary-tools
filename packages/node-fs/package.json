@@ -17,13 +17,17 @@
 	"author": "Tao Cumplido",
 	"repository": "https://github.com/tao-cumplido/binary-tools/tree/main/packages/core",
 	"bugs": "https://github.com/tao-cumplido/binary-tools/issues",
+	"type": "module",
+	"exports": {
+		".": "./dist/binary-data.js"
+	},
 	"scripts": {
 		"build": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
 		"build": {
-			"command": "tscd --pretty",
+			"command": "tsc",
 			"clean": "if-file-deleted",
 			"files": [
 				"src/**/*.ts",
@@ -35,7 +39,7 @@
 			]
 		},
 		"test": {
-			"command": "tsx --tsconfig tsconfig.test.json --conditions tsx --test-reporter @voxpelli/node-test-pretty-reporter --test 'src/**/*.suite.test.ts'",
+			"command": "node --conditions test --test-reporter @voxpelli/node-test-pretty-reporter --test 'src/**/*.suite.test.ts'",
 			"files": [
 				"src/**/*.test.ts",
 				"tsconfig.test.json"
@@ -47,19 +51,5 @@
 	},
 	"dependencies": {
 		"@binary-tools/core": "workspace:~"
-	},
-	"exports": {
-		".": {
-			"import": {
-				"types": "./dist/module/binary-data.d.ts",
-				"default": "./dist/module/binary-data.js"
-			},
-			"require": {
-				"types": "./dist/commonjs/binary-data.d.ts",
-				"default": "./dist/commonjs/binary-data.js"
-			}
-		}
-	},
-	"types": "./dist/commonjs/binary-data.d.ts",
-	"main": "./dist/commonjs/binary-data.js"
+	}
 }

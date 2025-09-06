@@ -1,8 +1,11 @@
-import type { DecoderObject } from "#datatypes/decoder.js";
-import { DecodeError } from "#datatypes/errors.js";
-import { Uint8Decoder } from "#datatypes/int/decode.js";
+import type { DecoderObject } from "#datatypes/decoder.ts";
+import { DecodeError } from "#datatypes/errors.ts";
+import { Uint8Decoder } from "#datatypes/int/decode.ts";
+
+import { encodingName, type Char } from "../util.ts";
 
 export const CharAsciiDecoder = {
+	[encodingName]: "ASCII",
 	requiredBufferSize: 1,
 	decode: ({ buffer, offset, }) => {
 		const { value, source, } = Uint8Decoder.decode({ buffer, offset, });
@@ -16,4 +19,4 @@ export const CharAsciiDecoder = {
 			source,
 		};
 	},
-} as const satisfies DecoderObject<number>;
+} as const satisfies Char<DecoderObject<number>>;
