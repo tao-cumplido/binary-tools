@@ -99,7 +99,6 @@ export const stringDecoderTerminated = (char: Decoder<number>, terminator = "\0"
 
 			({ buffer, offset, } = await queryState(source.byteLength, max));
 
-
 			while (charValue !== terminator && offset < buffer.byteLength) {
 				result.append(charValue, source);
 				({ value, source, } = validateResult(await decodeChar({ buffer, offset, byteOrder, }, queryState)));

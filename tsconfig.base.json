@@ -10,6 +10,7 @@
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
 		"useUnknownInCatchVariables": true,
+		"noImplicitOverride": true,
 		"exactOptionalPropertyTypes": true
 	},
 	"exclude": ["eslint-typgen.d.ts"]

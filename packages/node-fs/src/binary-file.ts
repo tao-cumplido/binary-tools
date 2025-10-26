@@ -1,11 +1,11 @@
 import type { FileHandle } from "node:fs/promises";
 import { fstatSync } from "node:fs";
 
-import { BinaryData as Base, ByteOrder, type BinaryDataConfig } from "@binary-tools/core";
+import { BinaryData, ByteOrder, type BinaryDataConfig } from "@binary-tools/core";
 
 export * from "@binary-tools/core";
 
-export class BinaryData extends Base {
+export class BinaryFile extends BinaryData {
 	#fileHandle: FileHandle;
 
 	get fileHandle(): FileHandle {
@@ -21,7 +21,7 @@ export class BinaryData extends Base {
 		super(
 			fstatSync(fileHandle.fd).size,
 			async ({ offset, byteLength, }) => {
-				const buffer = Buffer.alloc(byteLength);
+				const buffer = new Uint8Array(byteLength);
 				const { bytesRead, } = await fileHandle.read(buffer, 0, byteLength, offset);
 				return buffer.subarray(0, bytesRead);
 			},

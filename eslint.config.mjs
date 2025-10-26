@@ -22,7 +22,7 @@ export default typegen([
 			"shigen/group-imports": [ "error", ],
 			"shigen/sort-imports": [ "error", { inlineTypes: "end", typesInGroup: "top", caseGroups: true, }, ],
 			"stylistic/quotes": [ "error", "double", { allowTemplateLiterals: true, }, ],
-			"stylistic/quote-props": [ "error", "consistent-as-needed", ],
+			"stylistic/quote-props": [ "error", "consistent", ],
 			"stylistic/semi": [ "error", "always", ],
 			"stylistic/semi-style": [ "error", "last", ],
 			"stylistic/semi-spacing": [ "error", { before: false, after: true, }, ],

@@ -117,7 +117,10 @@ export class BinaryData {
 		const bufferOffset = this.#offset - this.#bufferStart;
 		const offset = this.#offset + delta;
 
-		if (bufferOffset + delta < 0 || bufferOffset + delta + requiredByteLength >= buffer.byteLength) {
+		if (
+			(this.#bufferStart < this.#byteLength || delta < 0) &&
+			(bufferOffset + delta < 0 || bufferOffset + delta + requiredByteLength >= buffer.byteLength)
+		) {
 			this.#buffer = await this.#updateBuffer({ offset, byteLength: Math.min(this.#bufferSize, this.#byteLength - offset), });
 			this.#bufferStart = offset;
 		}

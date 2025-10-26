@@ -19,13 +19,21 @@
 	"bugs": "https://github.com/tao-cumplido/binary-tools/issues",
 	"type": "module",
 	"exports": {
-		".": "./dist/binary-data.js"
+		".": "./dist/binary-file.js"
 	},
 	"scripts": {
+		"prepublishOnly": "wireit",
 		"build": "wireit",
+		"postbuild": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
+		"prepublishOnly": {
+			"dependencies": [
+				"test",
+				"build"
+			]
+		},
 		"build": {
 			"command": "tsc",
 			"clean": "if-file-deleted",
@@ -38,8 +46,16 @@
 				"dist"
 			]
 		},
+		"postbuild": {
+			"command": "attw --profile esm-only --pack .",
+			"files": [
+				"dist/**",
+				"package.json"
+			],
+			"output": []
+		},
 		"test": {
-			"command": "node --conditions test --test-reporter @voxpelli/node-test-pretty-reporter --test 'src/**/*.suite.test.ts'",
+			"command": "node --test-reporter spec --test 'src/**/*.test.ts'",
 			"files": [
 				"src/**/*.test.ts",
 				"tsconfig.test.json"
@@ -51,5 +67,8 @@
 	},
 	"dependencies": {
 		"@binary-tools/core": "workspace:~"
+	},
+	"devDependencies": {
+		"@shigen/test": "0.3.0"
 	}
 }
