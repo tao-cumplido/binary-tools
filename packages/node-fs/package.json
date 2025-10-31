@@ -1,6 +1,6 @@
 {
 	"name": "@binary-tools/node-fs",
-	"version": "0.11.0-alpha.1",
+	"version": "0.11.0-alpha.2",
 	"description": "Supercharged data view for files of arbitrary size",
 	"keywords": [
 		"binary",
